@@ -13,14 +13,18 @@ public class Main {
     
     public static void main(String[] args) {
         logger.info("** Starting Maze Runner");
-
+        
+        // Create new options object and add a command line flag
         Options options = new Options();
         options.addOption("i", true, "Path to the input maze txt file");
 
+        // create command line and command line parser objects
         CommandLineParser parser = new DefaultParser();
         CommandLine cmd;
 
         try {
+
+            // Parse command line arguments and retrieve -i flag argument
             cmd = parser.parse(options, args);
             String mazePath = cmd.getOptionValue("i");
             
