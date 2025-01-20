@@ -13,7 +13,7 @@
   <name>McMaster :: SFWRENG :: 2AA4 :: Maze Runner</name>
 
   <properties>
-    <mainClass>ca.mcmaster.se2aa4.mazerunner.Main</mainClass>
+    <mainClass>ca.mcmaster.se2aa4.mazerunner.MazeRunner</mainClass>
     <maven.compiler.source>21</maven.compiler.source>
     <maven.compiler.target>21</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
