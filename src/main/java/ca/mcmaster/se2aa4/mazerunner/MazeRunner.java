@@ -2,6 +2,7 @@ package ca.mcmaster.se2aa4.mazerunner;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,9 +16,10 @@ public class MazeRunner {
     private int numOfCols;
 
     private final int[][] mazeEntrances = new int[2][2]; // Stores west entry at index 0, and east entry at index 1
+    private final int[][] directionVectors = new int[][] {{-1,0}, {0,1}, {1,0}, {0,-1}}; // North, East, South, West
 
-    private StringBuilder pathToExit;
-    private StringBuilder pathToExitFactored;
+    private StringBuilder pathToExit = new StringBuilder();
+    private StringBuilder pathToExitFactored = new StringBuilder();
 
     public MazeRunner(String pathToMazeFile) {
         logger.trace("Constructing MazeRunner object");
@@ -76,12 +78,27 @@ public class MazeRunner {
         int[] currPos = this.mazeEntrances[0];
         TrueDirection currDir = new TrueDirection('E');
 
-//        while (currPos != this.mazeEntrances[1]) {
-//
-//
-//
-//        }
+        while (!Arrays.equals(currPos, this.mazeEntrances[1])) {
+            logger.info("Pos: [{}, {}], Dir: {}", currPos[0], currPos[1], currDir.getTrueDirection());
+            int[] rightSquare = new int[] {currPos[0] + directionVectors[(currDir.getTrueDirection()+1)%4][0], currPos[1] + directionVectors[(currDir.getTrueDirection()+1)%4][1]};
+            logger.trace("Checked right square");
+            int[] forwardSquare = new int[] {currPos[0] + directionVectors[currDir.getTrueDirection()][0], currPos[1] + directionVectors[currDir.getTrueDirection()][1]};
 
+            if (checkCoord(rightSquare)) {
+                currDir.turnRight();
+                this.pathToExit.append("RF");
+                currPos = rightSquare;
+            } else if (checkCoord(forwardSquare)) {
+                this.pathToExit.append('F');
+                currPos = forwardSquare;
+            } else {
+                currDir.turnLeft();
+                this.pathToExit.append('L');
+            }
+        }
+
+        logger.info("**** Calculated path to exit using right hand algorithm");
+        System.out.println(this.pathToExit.toString());
     }
 
     private boolean checkCoord(int[] coordinate) { // Returns true if coordinate exists and is not a wall
@@ -114,6 +131,7 @@ public class MazeRunner {
 
              MazeRunner mr = new MazeRunner(mazePath);
              mr.displayMaze();
+             mr.findPath();
          } catch(Exception e) {
              logger.error("/!\\\\ An error has occurred /!\\\\");
          }

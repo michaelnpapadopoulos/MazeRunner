@@ -2,7 +2,6 @@ package ca.mcmaster.se2aa4.mazerunner;
 
 public class TrueDirection { // ADT to keep track of absolute direction during path finding
     private int trueDirection; // Stores a value between 0 and 3, 0 being North, 1 being east, and so on.
-    private int[][] directionVectors = new int[][] {{-1,0}, {0,1}, {1,0}, {0,-1}};
 
     public TrueDirection(char startingDirection) { // Smelly but necessary :(
         switch (startingDirection) {
@@ -21,14 +20,12 @@ public class TrueDirection { // ADT to keep track of absolute direction during p
         }
     }
 
-    public char turnLeft() {
-        this.trueDirection = (this.trueDirection-1)%4;
-        return 'L';
+    public void turnLeft() {
+        this.trueDirection = (this.trueDirection+3)%4;
     }
 
-    public char turnRight() {
+    public void turnRight() {
         this.trueDirection = (this.trueDirection+1)%4;
-        return 'R';
     }
 
     public int getTrueDirection() {
