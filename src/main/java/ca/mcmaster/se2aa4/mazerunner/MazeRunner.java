@@ -9,16 +9,19 @@ import org.apache.commons.cli.*;
 
 public class MazeRunner {
     private static final Logger logger = LogManager.getLogger();
+
     private char[][] maze;
     private int numOfRows;
     private int numOfCols;
+
+    private final int[][] mazeEntrances = new int[2][2]; // Stores west entry at index 0, and east entry at index 1
+
     private StringBuilder pathToExit;
     private StringBuilder pathToExitFactored;
 
     public MazeRunner(String pathToMazeFile) {
         logger.trace("Constructing MazeRunner object");
         try {
-
             logger.trace("Reading maze from input file path");
             ArrayList<String> rawMaze = new ArrayList<>(); // Stores the raw data from txt file into dynamic arraylist
             BufferedReader reader = new BufferedReader(new FileReader(pathToMazeFile));
@@ -42,7 +45,6 @@ public class MazeRunner {
         } catch (IOException e) {
             logger.error("Unable to read file from path: {}", pathToMazeFile, e);
         }
-        
     }
 
     public void displayMaze() {
@@ -54,13 +56,42 @@ public class MazeRunner {
         }
     }
 
-    // Find entry point method (always on the west side)
+    public void findEntryPoints() {
+        logger.trace("**** Finding maze entry points");
+        for (int row = 0; row < numOfRows; row++) { // Entrance in west wall
+            if (this.maze[row][0] == ' ') {
+                this.mazeEntrances[0] = new int[] {row, 0};
+            }
 
-    // Test if a given path is viable (Easiest to just simulate by attempting to take a given path)
+            if (this.maze[row][numOfCols-1] == ' ') {
+                this.mazeEntrances[1] = new int[] {row, numOfCols-1};
+            }
+        }
 
-    // Find sequence of directions
+        logger.trace("**** Found west and east entry respectively: ({}, {}), ({}, {}) ", this.mazeEntrances[0][0], this.mazeEntrances[0][1], this.mazeEntrances[1][0], this.mazeEntrances[1][1]);
+    }
 
-    // Convert sequence of directions to factored form
+    public void findPath() { // Only need to find path from west side to east (Can derive path for east to west from it)
+        findEntryPoints();
+        int[] currPos = this.mazeEntrances[0];
+        TrueDirection currDir = new TrueDirection('E');
+
+//        while (currPos != this.mazeEntrances[1]) {
+//
+//
+//
+//        }
+
+    }
+
+    private boolean checkCoord(int[] coordinate) { // Returns true if coordinate exists and is not a wall
+        logger.trace("Checking coordinate {}, {}", coordinate[0], coordinate[1]);
+        if (coordinate[0] < 0 || coordinate[0] >= numOfRows || coordinate[1] < 0 || coordinate[1] >= numOfCols) {
+            return false;
+        }
+
+        return this.maze[coordinate[0]][coordinate[1]] == ' ';
+    }
 
 
 
