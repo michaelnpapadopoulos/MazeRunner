@@ -76,7 +76,7 @@ public class MazeRunner {
     public void findPath() { // Only need to find path from west side to east (Can derive path for east to west from it)
         findEntryPoints();
         int[] currPos = this.mazeEntrances[0];
-        TrueDirection currDir = new TrueDirection('E');
+        DirectionManager currDir = new DirectionManager('E');
 
         while (!Arrays.equals(currPos, this.mazeEntrances[1])) {
             logger.info("Pos: [{}, {}], Dir: {}", currPos[0], currPos[1], currDir.getTrueDirection());

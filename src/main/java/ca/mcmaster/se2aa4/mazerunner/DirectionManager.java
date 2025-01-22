@@ -1,9 +1,9 @@
 package ca.mcmaster.se2aa4.mazerunner;
 
-public class TrueDirection { // ADT to keep track of absolute direction during path finding
+public class DirectionManager { // ADT to keep track of absolute direction during path finding
     private int trueDirection; // Stores a value between 0 and 3, 0 being North, 1 being east, and so on.
 
-    public TrueDirection(char startingDirection) { // Smelly but necessary :(
+    public DirectionManager(char startingDirection) { // Smelly but necessary :(
         switch (startingDirection) {
             case 'N':
                 this.trueDirection = 0;
