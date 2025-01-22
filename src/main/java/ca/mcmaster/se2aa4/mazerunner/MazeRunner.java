@@ -9,22 +9,22 @@ import org.apache.logging.log4j.Logger;
 import org.apache.commons.cli.*;
 
 public class MazeRunner {
-    private static final Logger logger = LogManager.getLogger();
+    private static final Logger logger = LogManager.getLogger(); // Logger object
 
+    // Store maze as 2d char array, as well as size of array
     private char[][] maze;
     private int numOfRows;
     private int numOfCols;
 
     private final int[][] mazeEntrances = new int[2][2]; // Stores west entry at index 0, and east entry at index 1
-    private final int[][] directionVectors = new int[][] {{-1,0}, {0,1}, {1,0}, {0,-1}}; // North, East, South, West
 
-    private StringBuilder pathToExit = new StringBuilder();
-    private StringBuilder pathToExitFactored = new StringBuilder();
+    private StringBuilder pathToExit = new StringBuilder(); // Stores the un-factored path to exit
 
-    public MazeRunner(String pathToMazeFile) {
-        logger.trace("Constructing MazeRunner object");
+    public MazeRunner(String pathToMazeFile) { // Constructor
+        logger.trace("**** Constructing MazeRunner object");
+
         try {
-            logger.trace("Reading maze from input file path");
+            logger.trace("**** Reading maze from input file path");
             ArrayList<String> rawMaze = new ArrayList<>(); // Stores the raw data from txt file into dynamic arraylist
             BufferedReader reader = new BufferedReader(new FileReader(pathToMazeFile));
 
@@ -36,21 +36,35 @@ public class MazeRunner {
             this.numOfCols = rawMaze.getFirst().length();
             this.numOfRows = rawMaze.size();
 
+            StringBuilder emptyRow = new StringBuilder();
+            for (int size = 0; size < numOfCols; size++) {
+                emptyRow.append(' ');
+            }
+
+            while (rawMaze.contains("")) {
+                logger.trace("**** Maze contains a blank row, replacing with empty string of correct size");
+                rawMaze.set(rawMaze.indexOf(""), emptyRow.toString());
+            }
+
+            logger.trace("**** Dimensions of maze: {} x {}", numOfRows, numOfCols);
+
             // Convert raw maze data into a 2d character array for ease of processing
-            logger.trace("Storing maze in 2D array");
+            logger.trace("**** Storing maze in 2D array");
             this.maze = new char[numOfRows][numOfCols];
             for (int row = 0; row < numOfRows; row++) { // Populate maze array
                 for (int col = 0; col < numOfCols; col++) {
+                    logger.trace("**** Assigning index {}, {} to maze", row, col);
                     this.maze[row][col] = rawMaze.get(row).charAt(col);
                 }
             }
+            logger.trace("**** Stored maze in 2D array");
         } catch (IOException e) {
             logger.error("Unable to read file from path: {}", pathToMazeFile, e);
         }
     }
 
-    public void displayMaze() {
-        for (int row = 0; row < numOfRows; row++) { // Populate maze array
+    public void displayMaze() { // Displays the maze to std out
+        for (int row = 0; row < numOfRows; row++) {
             for (int col = 0; col < numOfCols; col++) {
                 System.out.printf("%c", this.maze[row][col]);
             }
@@ -65,7 +79,7 @@ public class MazeRunner {
                 this.mazeEntrances[0] = new int[] {row, 0};
             }
 
-            if (this.maze[row][numOfCols-1] == ' ') {
+            if (this.maze[row][numOfCols-1] == ' ') { // Entrance in east wall
                 this.mazeEntrances[1] = new int[] {row, numOfCols-1};
             }
         }
@@ -73,32 +87,25 @@ public class MazeRunner {
         logger.trace("**** Found west and east entry respectively: ({}, {}), ({}, {}) ", this.mazeEntrances[0][0], this.mazeEntrances[0][1], this.mazeEntrances[1][0], this.mazeEntrances[1][1]);
     }
 
-    public void findPath() { // Only need to find path from west side to east (Can derive path for east to west from it)
+    public void findPath() {
         findEntryPoints();
-        int[] currPos = this.mazeEntrances[0];
-        TrueDirection currDir = new TrueDirection('E');
+        int[] currentPos = this.mazeEntrances[0];
 
-        while (!Arrays.equals(currPos, this.mazeEntrances[1])) {
-            logger.info("Pos: [{}, {}], Dir: {}", currPos[0], currPos[1], currDir.getTrueDirection());
-            int[] rightSquare = new int[] {currPos[0] + directionVectors[(currDir.getTrueDirection()+1)%4][0], currPos[1] + directionVectors[(currDir.getTrueDirection()+1)%4][1]};
-            logger.trace("Checked right square");
-            int[] forwardSquare = new int[] {currPos[0] + directionVectors[currDir.getTrueDirection()][0], currPos[1] + directionVectors[currDir.getTrueDirection()][1]};
+        logger.trace("**** beginning forward search");
+        while (!Arrays.equals(currentPos, this.mazeEntrances[1])) { // While not at exit of maze
+            int[] forwardPos = new int[] {currentPos[0], currentPos[1] + 1}; // Gets location of forward tile
 
-            if (checkCoord(rightSquare)) {
-                currDir.turnRight();
-                this.pathToExit.append("RF");
-                currPos = rightSquare;
-            } else if (checkCoord(forwardSquare)) {
+            if (checkCoord(forwardPos)) { // Checks forward square
                 this.pathToExit.append('F');
-                currPos = forwardSquare;
+                currentPos = forwardPos;
             } else {
-                currDir.turnLeft();
-                this.pathToExit.append('L');
+                logger.info("** Cant find simple forward path through maze");
             }
         }
+    }
 
-        logger.info("**** Calculated path to exit using right hand algorithm");
-        System.out.println(this.pathToExit.toString());
+    public void outputPath() {
+        System.out.println("Path through maze: " + this.pathToExit);
     }
 
     private boolean checkCoord(int[] coordinate) { // Returns true if coordinate exists and is not a wall
@@ -123,21 +130,26 @@ public class MazeRunner {
          // create command line and command line parser objects
          CommandLineParser parser = new DefaultParser();
          CommandLine cmd;
+         MazeRunner mr;
 
          try {
              // Parse command line arguments and retrieve -i flag argument
              cmd = parser.parse(options, args);
-             String mazePath = cmd.getOptionValue("i");
+             String mazeFilePath = cmd.getOptionValue("i");
 
-             MazeRunner mr = new MazeRunner(mazePath);
-             mr.displayMaze();
+             mr = new MazeRunner(mazeFilePath);
+
+             logger.trace("**** Computing path");
              mr.findPath();
+             mr.outputPath();
          } catch(Exception e) {
-             logger.error("/!\\\\ An error has occurred /!\\\\");
+             logger.error("/!\\\\ An error has occurred /!\\\\", e);
          }
 
-         logger.trace("**** Computing path");
-         System.out.println("PATH NOT COMPUTED");
+
+
+
+
          logger.info("** End of MazeRunner");
     }
 }
