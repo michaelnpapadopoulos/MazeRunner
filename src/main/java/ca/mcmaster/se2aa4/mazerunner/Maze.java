@@ -101,10 +101,13 @@ public class Maze {
 
     public boolean checkCoord(int[] coordinate) { // Returns true if coordinate exists and is not a wall
         logger.trace("**** Checking coordinate {}, {}", coordinate[0], coordinate[1]);
+
         if (coordinate[0] < 0 || coordinate[0] >= numOfRows || coordinate[1] < 0 || coordinate[1] >= numOfCols) {
             return false;
         }
 
         return this.maze[coordinate[0]][coordinate[1]] == ' ';
     }
+
+    public int[][] getEntryPoints() { return this.mazeEntrances; }
 }

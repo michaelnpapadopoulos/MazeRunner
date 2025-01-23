@@ -12,68 +12,60 @@ public class MazeRunner {
     public static final Logger logger = LogManager.getLogger(); // Logger object
 
     private final Maze maze;
-    private StringBuilder pathToExit = new StringBuilder(); // Stores the un-factored path to exit
+    private final DirectionManager startingDirection;
+
+    private String pathToExit; // Stores the un-factored path to exit
+
 
     public MazeRunner(String pathToMazeFile) { // Constructor
         logger.trace("**** Constructing MazeRunner object");
 
-        maze = new Maze(pathToMazeFile);
+        this.maze = new Maze(pathToMazeFile);
+        startingDirection = new DirectionManager('E'); // Assumes always start facing east
     }
 
 
     public void findPath() {
-        findEntryPoints();
-        int[] currentPos = this.mazeEntrances[0];
+        logger.trace("**** Computing path");
+        int[] startingPos = this.maze.getEntryPoints()[0]; // Assumes always start at west wall
 
-        logger.trace("**** beginning forward search");
-        while (!Arrays.equals(currentPos, this.mazeEntrances[1])) { // While not at exit of maze
-            int[] forwardPos = new int[] {currentPos[0], currentPos[1] + 1}; // Gets location of forward tile
+        PathFindingAlgorithm pfa = new ForwardSearchAlgorithm(this.maze, startingPos, this.startingDirection);
+        pfa.findPath();
 
-            if (checkCoord(forwardPos)) { // Checks forward square
-                this.pathToExit.append('F');
-                currentPos = forwardPos;
-            } else {
-                logger.info("** Cant find simple forward path through maze");
-            }
-        }
+        System.out.println("Found path: "+ pfa.getFoundPath());
     }
 
-    public void outputPath() {
-        System.out.println("Path through maze: " + this.pathToExit);
-    }
 
-    public void verifyPath(String path) {
-        DirectionManager direction = new DirectionManager('E');
-        int[] currPos = this.mazeEntrances[0];
 
-        for (int charIndex = 0; charIndex < path.length(); charIndex++) {
+    public void verifyPath(String path) { // Checks if path is valid from west to east and east to west
+        logger.trace("**** Verifying path: {}", path);
+        int[] currPos = this.maze.getEntryPoints()[0]; // Assumes always start at west wall
+
+        for (int charIndex = 0; charIndex < path.length(); charIndex++) { // Iterates through entire path string
             char currChar = path.charAt(charIndex);
             if (currChar == 'F') {
-                currPos = direction.getNewPosition(direction, currPos);
+                currPos = this.startingDirection.getNewPosition(startingDirection, currPos);
             } else if (currChar == 'R') {
-                direction.turnRight();
+                startingDirection.turnRight();
             } else {
-                direction.turnLeft();
+                startingDirection.turnLeft();
             }
 
-            if (!checkCoord(currPos)) {
-                System.out.println("Not a valid path!");
+            if (!this.maze.checkCoord(currPos)) {
+                System.out.println("Input path valid: " + false);
                 return;
             }
         }
 
-        if (Arrays.equals(currPos, this.mazeEntrances[1])) {
-            System.out.println(path + " is a valid path!");
-        } else {
-            System.out.println(path + " is not valid path!");
-        }
+        boolean validPath = Arrays.equals(currPos, this.maze.getEntryPoints()[1]);
+        System.out.println("Input path valid: " + validPath);
     }
 
     
     public static void main(String[] args) {
          logger.info("** Starting Maze Runner");
         
-         // Create new options object and add a command line flag
+         // Create new options object and add command line flags
          Options options = new Options();
          options.addOption("i", true, "Path to the input maze txt file");
          options.addOption("p", true, "User provided path through maze");
@@ -81,33 +73,26 @@ public class MazeRunner {
          // create command line and command line parser objects
          CommandLineParser parser = new DefaultParser();
          CommandLine cmd;
-         MazeRunner mr;
 
          try {
              // Parse command line arguments and retrieve -i flag argument
              cmd = parser.parse(options, args);
-             String mazeFilePath = cmd.getOptionValue("i");
 
+             if (cmd.hasOption("i")) {
+                 String mazeFilePath = cmd.getOptionValue("i");
+                 MazeRunner mr = new MazeRunner(mazeFilePath);
+                 mr.findPath();
 
-
-             mr = new MazeRunner(mazeFilePath);
-
-             logger.trace("**** Computing path");
-             mr.findPath();
-             mr.outputPath();
-
-             if (cmd.hasOption("p")) {
-                 String userPath = cmd.getOptionValue("p");
-                 mr.verifyPath(userPath);
+                 if (cmd.hasOption("p")) {
+                     String userPath = cmd.getOptionValue("p");
+                     mr.verifyPath(userPath);
+                 }
+             } else {
+                 System.out.println("**Please provide the path to a maze.txt file using the -i flag**");
              }
-
-         } catch(Exception e) {
-             logger.error("/!\\\\ An error has occurred /!\\\\", e);
+         } catch(ParseException e) {
+             logger.error("/!\\\\ An error has occurred whilst trying to parse command line arguments /!\\\\", e);
          }
-
-
-
-
 
          logger.info("** End of MazeRunner");
     }

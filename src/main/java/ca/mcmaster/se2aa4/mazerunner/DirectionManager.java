@@ -22,19 +22,13 @@ public class DirectionManager { // ADT to keep track of absolute direction durin
         }
     }
 
-    public void turnLeft() {
-        this.trueDirection = (this.trueDirection+3)%4;
-    }
+    public void turnLeft() { this.trueDirection = (this.trueDirection+3)%4; }
 
-    public void turnRight() {
-        this.trueDirection = (this.trueDirection+1)%4;
-    }
+    public void turnRight() { this.trueDirection = (this.trueDirection+1)%4; }
 
     public int[] getNewPosition(DirectionManager direction, int[] position) {
         return new int[] {position[0] + directionVectors[direction.getTrueDirection()][0], position[1] + directionVectors[direction.getTrueDirection()][1]};
     }
 
-    public int getTrueDirection() {
-        return this.trueDirection;
-    }
+    public int getTrueDirection() { return this.trueDirection; }
 }
