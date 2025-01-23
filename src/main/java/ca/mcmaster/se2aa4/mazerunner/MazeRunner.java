@@ -1,7 +1,5 @@
 package ca.mcmaster.se2aa4.mazerunner;
 
-import java.io.*;
-import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.apache.logging.log4j.LogManager;
@@ -11,11 +9,9 @@ import org.apache.commons.cli.*;
 public class MazeRunner {
     public static final Logger logger = LogManager.getLogger(); // Logger object
 
+    // Instance variables to store a maze and direction object
     private final Maze maze;
     private final DirectionManager startingDirection;
-
-    private String pathToExit; // Stores the un-factored path to exit
-
 
     public MazeRunner(String pathToMazeFile) { // Constructor
         logger.trace("**** Constructing MazeRunner object");
@@ -44,7 +40,7 @@ public class MazeRunner {
         for (int charIndex = 0; charIndex < path.length(); charIndex++) { // Iterates through entire path string
             char currChar = path.charAt(charIndex);
             if (currChar == 'F') {
-                currPos = this.startingDirection.getNewPosition(startingDirection, currPos);
+                currPos = this.startingDirection.getNewPosition(currPos);
             } else if (currChar == 'R') {
                 startingDirection.turnRight();
             } else {

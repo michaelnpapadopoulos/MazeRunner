@@ -109,5 +109,5 @@ public class Maze {
         return this.maze[coordinate[0]][coordinate[1]] == ' ';
     }
 
-    public int[][] getEntryPoints() { return this.mazeEntrances; }
+    public int[][] getEntryPoints() { return this.mazeEntrances; } // Getter for entry points
 }

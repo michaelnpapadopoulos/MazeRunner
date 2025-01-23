@@ -14,7 +14,7 @@ public class ForwardSearchAlgorithm extends PathFindingAlgorithm {
         logger.trace("**** beginning forward search");
 
         while (!Arrays.equals(this.position, this.maze.getEntryPoints()[1])) { // While not at exit of maze
-            int[] forwardPos = new int[] {this.position[0], this.position[1] + 1}; // Gets location of forward tile
+            int[] forwardPos = this.direction.getNewPosition(this.position); // Gets location of forward (Eastward) tile
 
             if (maze.checkCoord(forwardPos)) { // Checks forward square
                 this.foundPath.append('F');
