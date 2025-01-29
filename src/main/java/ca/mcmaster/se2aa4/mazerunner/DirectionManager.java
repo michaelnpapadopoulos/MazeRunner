@@ -22,6 +22,8 @@ public class DirectionManager { // Keeps track of absolute direction during path
         }
     }
 
+    public DirectionManager(int startingDirection) { this.trueDirection = startingDirection; }
+
     public void turnLeft() { this.trueDirection = (this.trueDirection+3)%4; }
 
     public void turnRight() { this.trueDirection = (this.trueDirection+1)%4; }

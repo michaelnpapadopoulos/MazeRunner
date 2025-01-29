@@ -4,22 +4,16 @@ import static ca.mcmaster.se2aa4.mazerunner.MazeRunner.logger;
 
 public abstract class PathFindingAlgorithm {
 
-    protected final StringBuilder foundPath = new StringBuilder();
     protected final Maze maze;
-    protected final DirectionManager direction;
-    protected int[] position;
+    protected int[] startPosition;
+    protected int[] endPosition;
 
-    public PathFindingAlgorithm(Maze maze, int[] position, DirectionManager direction) {
+    public PathFindingAlgorithm(Maze maze, int[] startPos, int[] endPos) {
         logger.trace("**** Constructing pathFinder object");
         this.maze = maze;
-        this.direction = direction;
-        this.position = position;
+        this.startPosition = startPos;
+        this.endPosition = endPos;
     }
 
-    public abstract void findPath();
-
-    public String getFoundPath() {
-        logger.trace("**** Getting path to exit");
-        return this.foundPath.toString();
-    }
+    public abstract String findPath();
 }

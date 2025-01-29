@@ -77,8 +77,8 @@ public class Maze {
 
     private void findEntryPoints() {
         logger.trace("**** Finding maze entry points");
-        for (int row = 0; row < this.numOfRows; row++) { // Entrance in west wall
-            if (this.maze[row][0] == ' ') {
+        for (int row = 0; row < this.numOfRows; row++) { 
+            if (this.maze[row][0] == ' ') { // Entrance in west wall
                 this.mazeEntrances[0] = new int[] {row, 0};
             }
 

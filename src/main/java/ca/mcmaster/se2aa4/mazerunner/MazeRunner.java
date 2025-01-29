@@ -23,12 +23,15 @@ public class MazeRunner implements StringConverter { // Implements StringConvert
 
     public void findPath() {
         logger.trace("**** Computing path");
-        int[] startingPos = this.maze.getEntryPoints()[0]; // Assumes always start at west wall
+        int[] startingPos = this.maze.getEntryPoints()[0];
+        int[] endingPos = this.maze.getEntryPoints()[1];
 
-        PathFindingAlgorithm pfa = new ForwardSearchAlgorithm(this.maze, startingPos, this.startingDirection);
-        pfa.findPath();
+        PathFindingAlgorithm pfa = new RightHandSearch(this.maze, startingPos, endingPos);
+        String pathToExit = pfa.findPath();
 
-        System.out.println("Found path: "+ pfa.getFoundPath());
+        pathToExit = convertToFactored(pathToExit);
+        
+        System.out.println("Found path: "+ pathToExit);
     }
 
 
@@ -84,7 +87,7 @@ public class MazeRunner implements StringConverter { // Implements StringConvert
                      mr.verifyPath(userPath);
                  }
 
-                 logger.trace("Converted to factored: {}", mr.convertToFactored("FLFFFFFFFFFFFFFFFFFFFRFFRRRRRRRRRRRRRRFFLFFFFFFRFFFFLF"));
+                 logger.trace("Converted to factored: {}", mr.convertToFactored("FLFFFFFFFFFFFFFFFFFFFRFFRRRRRRRRRRRRRRFFLFFFFFFRFFFFLL"));
                  logger.trace("Converted to unfactored: {}", mr.convertToUnfactored("F L 5F R 2F R 2F L 6F R 4F L F"));
              } else {
                  System.out.println("**Please provide the path to a maze.txt file using the -i flag**");

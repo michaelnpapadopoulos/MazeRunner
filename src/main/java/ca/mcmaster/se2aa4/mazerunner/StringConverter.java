@@ -20,12 +20,17 @@ public interface StringConverter {
                     factoredPath.append(charCount);
                 }
 
-                factoredPath.append(prevChar);
+                factoredPath.append(prevChar + " ");
                 charCount = 1;
             }
         }
 
-        return factoredPath.toString();
+        // Append the last character/set of characters to the factored path
+        char lastChar = unfactoredPath.charAt(unfactoredPath.length() - 1);
+        if (charCount > 1) { factoredPath.append(charCount); }
+        factoredPath.append(lastChar);
+
+        return factoredPath.toString().strip();
     }
 
     default String convertToUnfactored(String factoredPath) {
