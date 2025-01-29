@@ -9,18 +9,18 @@ import org.apache.commons.cli.*;
 public class MazeRunner implements StringConverter { // Implements StringConverter interface
     public static final Logger logger = LogManager.getLogger(); // Logger object
 
-    // Instance variables to store a maze and direction object
+    // Stores maze object for processing throughout methods
     private final Maze maze;
-    private final DirectionManager startingDirection;
 
+    
     public MazeRunner(String pathToMazeFile) { // Constructor
         logger.trace("**** Constructing MazeRunner object");
 
         this.maze = new Maze(pathToMazeFile);
-        startingDirection = new DirectionManager('E'); // Assumes always start facing east
     }
 
-
+    
+    //=========== PATH FINDING METHODS ===========//
     public void findPath() {
         logger.trace("**** Computing path");
         int[] startingPos = this.maze.getEntryPoints()[0];
@@ -34,33 +34,50 @@ public class MazeRunner implements StringConverter { // Implements StringConvert
         System.out.println("Found path: "+ pathToExit);
     }
 
-
-
+    
+    //=========== PATH VERIFICATION METHODS ===========//
     public void verifyPath(String path) { // Checks if path is valid from west to east and east to west
         logger.trace("**** Verifying path: {}", path);
-        int[] currPos = this.maze.getEntryPoints()[0]; // Assumes always start at west wall
+
+        String cleanedPath = convertToUnfactored(removeSpaces(path));
+    
+        boolean westToEast = verifySpecificPath(cleanedPath, this.maze.getEntryPoints()[0], this.maze.getEntryPoints()[1], 'E');
+        boolean eastToWest = verifySpecificPath(cleanedPath, this.maze.getEntryPoints()[1], this.maze.getEntryPoints()[0], 'W');
+
+        if (westToEast) {
+            System.out.println("The following path is valid from West to East:\n> " + path);
+        } else if (eastToWest) {
+            System.out.println("The following path is valid from East to West:\n> " + path);
+        } else {
+            System.out.println("The following path is invalid:\n> " + path);
+        }
+    }
+
+    private boolean verifySpecificPath(String path, int[] startingPos, int[] endingPos, char startingDirection) {
+        int[] currPos = startingPos;
+        DirectionManager currDirection = new DirectionManager(startingDirection);
 
         for (int charIndex = 0; charIndex < path.length(); charIndex++) { // Iterates through entire path string
             char currChar = path.charAt(charIndex);
+
             if (currChar == 'F') {
-                currPos = this.startingDirection.getNewPosition(currPos);
+                currPos = currDirection.getNewPosition(currPos);
             } else if (currChar == 'R') {
-                startingDirection.turnRight();
+                currDirection.turnRight();
             } else {
-                startingDirection.turnLeft();
+                currDirection.turnLeft();
             }
 
-            if (!this.maze.checkCoord(currPos)) {
-                System.out.println("Input path valid: " + false);
-                return;
+            if (!this.maze.checkCoord(currPos)) { // False if position is "out of bounds"
+                return false;
             }
         }
 
-        boolean validPath = Arrays.equals(currPos, this.maze.getEntryPoints()[1]);
-        System.out.println("Input path valid: " + validPath);
+        return Arrays.equals(currPos, endingPos);
     }
 
     
+    //=========== MAIN METHOD ===========//
     public static void main(String[] args) {
          logger.info("** Starting Maze Runner");
         

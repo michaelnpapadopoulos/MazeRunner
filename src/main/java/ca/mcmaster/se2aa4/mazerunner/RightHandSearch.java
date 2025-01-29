@@ -6,9 +6,11 @@ import java.util.Arrays;
 
 public class RightHandSearch extends PathFindingAlgorithm {
     
+    
     public RightHandSearch(Maze maze, int[] startPos, int[] endPos) {
         super(maze, startPos, endPos);
     }
+
 
     private String findSpecificPath(Maze maze, int[] startPos, int[] endPos, char startingDirection) {
         logger.trace("**** Starting search at: {}, facing {}", startPos, startingDirection);
@@ -42,6 +44,7 @@ public class RightHandSearch extends PathFindingAlgorithm {
         logger.trace("**** Found path: {}", path);
         return path.toString();
     }
+
 
     public String findPath() {
         logger.trace("**** Finding path using right hand search");
