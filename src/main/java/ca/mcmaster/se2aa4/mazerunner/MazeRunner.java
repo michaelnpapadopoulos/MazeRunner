@@ -6,7 +6,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.commons.cli.*;
 
-public class MazeRunner {
+public class MazeRunner implements StringConverter { // Implements StringConverter interface
     public static final Logger logger = LogManager.getLogger(); // Logger object
 
     // Instance variables to store a maze and direction object
@@ -83,6 +83,9 @@ public class MazeRunner {
                      String userPath = cmd.getOptionValue("p");
                      mr.verifyPath(userPath);
                  }
+
+                 logger.trace("Converted to factored: {}", mr.convertToFactored("FLFFFFFFFFFFFFFFFFFFFRFFRRRRRRRRRRRRRRFFLFFFFFFRFFFFLF"));
+                 logger.trace("Converted to unfactored: {}", mr.convertToUnfactored("F L 5F R 2F R 2F L 6F R 4F L F"));
              } else {
                  System.out.println("**Please provide the path to a maze.txt file using the -i flag**");
              }
