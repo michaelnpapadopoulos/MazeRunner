@@ -4,6 +4,7 @@ import static ca.mcmaster.se2aa4.mazerunner.MazeRunner.logger;
 
 public interface StringConverter {
 
+    //=========== FACTORING METHODS ===========//
     default String convertToFactored(String unfactoredPath) {
         logger.trace("**** Converting unfactored path to factored path");
         StringBuilder factoredPath = new StringBuilder();
@@ -63,6 +64,8 @@ public interface StringConverter {
         return unfactoredPath.toString();
     }
 
+
+    //=========== CLEAN METHOD ===========//
     default String removeSpaces(String stringToClean) {
         String cleanedString = stringToClean.replaceAll("\\s", ""); // Regex to replace all whitespace chars
         return cleanedString;

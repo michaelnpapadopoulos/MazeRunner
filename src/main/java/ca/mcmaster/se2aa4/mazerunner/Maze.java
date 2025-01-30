@@ -24,6 +24,8 @@ public class Maze {
         findEntryPoints();
     }
 
+
+    //=========== MAZE CREATION METHODS ===========//
     private ArrayList<String> convertToRawMaze(String pathToMazeFile) {
         logger.trace("**** Reading maze from input file path");
         ArrayList<String> rawMaze = new ArrayList<>(); // Stores the raw data from txt file into dynamic arraylist
@@ -47,10 +49,11 @@ public class Maze {
         this.numOfCols = rawMaze.getFirst().length();
     }
 
-    private void verifyMaze(ArrayList<String> rawMaze) { // Ensures no empty rows in maze
+    private void verifyMaze(ArrayList<String> rawMaze) { // Ensures no empty rows in maze (Possibly unnecessary, but included for robustness)
         logger.trace("**** Verifying maze");
-        if (rawMaze.contains("")) {
-            StringBuilder emptyRow = new StringBuilder();
+
+        if (rawMaze.contains("")) { // Contains the empty string
+            StringBuilder emptyRow = new StringBuilder(); // Stores a string containing only whitespaces of the correct size
             for (int size = 0; size < numOfCols; size++) {
                 emptyRow.append(' ');
             }
@@ -89,8 +92,10 @@ public class Maze {
 
         logger.trace("**** Found west and east entry respectively: ({}, {}), ({}, {}) ", this.mazeEntrances[0][0], this.mazeEntrances[0][1], this.mazeEntrances[1][0], this.mazeEntrances[1][1]);
     }
+    
 
-    public void displayMaze() { // Displays the maze to std out
+    //=========== MAZE INTERACTION METHODS ===========//
+    public void displayMaze() { // Displays the maze to std out (For later development)
         for (int row = 0; row < this.numOfRows; row++) {
             for (int col = 0; col < this.numOfCols; col++) {
                 System.out.printf("%c", this.maze[row][col]);

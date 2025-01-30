@@ -4,13 +4,7 @@ import static ca.mcmaster.se2aa4.mazerunner.MazeRunner.logger;
 
 import java.util.Arrays;
 
-public class RightHandSearch extends PathFindingAlgorithm {
-    
-    
-    public RightHandSearch(Maze maze, int[] startPos, int[] endPos) {
-        super(maze, startPos, endPos);
-    }
-
+public class RightHandSearch extends PathFindingAlgorithm implements StringConverter {
 
     private String findSpecificPath(Maze maze, int[] startPos, int[] endPos, char startingDirection) {
         logger.trace("**** Starting search at: {}, facing {}", startPos, startingDirection);
@@ -46,10 +40,10 @@ public class RightHandSearch extends PathFindingAlgorithm {
     }
 
 
-    public String findPath() {
+    public String findPath(Maze maze, int[] startPos, int[] endPos) {
         logger.trace("**** Finding path using right hand search");
-        String westToEastPath = findSpecificPath(this.maze, this.startPosition, this.endPosition, 'E');
-        String eastToWestPath = findSpecificPath(this.maze, this.endPosition, this.startPosition, 'W');
+        String westToEastPath = findSpecificPath(maze, startPos, endPos, 'E');
+        String eastToWestPath = findSpecificPath(maze, endPos, startPos, 'W');
 
         String shortestPath = new String();
         String startingWall = new String();
@@ -63,7 +57,7 @@ public class RightHandSearch extends PathFindingAlgorithm {
         }
 
         System.out.println("Starting wall: " + startingWall);
-        return shortestPath;
+        return convertToFactored(shortestPath);
     }
 
 }
