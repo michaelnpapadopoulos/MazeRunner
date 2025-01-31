@@ -8,16 +8,20 @@ import java.util.ArrayList;
 import static ca.mcmaster.se2aa4.mazerunner.MazeRunner.logger;
 
 public class Maze {
+
+    //=========== MAZE ATTRIBUTES ===========//
     private final char[][] maze;
     private int numOfRows;
     private int numOfCols;
     private final int[][] mazeEntrances = new int[2][2];
 
+
+    //=========== MAZE CONSTRUCTOR ===========//
     public Maze(String pathToMazeFile) { // Constructor
         logger.trace("**** Constructing Maze object");
 
         ArrayList<String> rawMaze = convertToRawMaze(pathToMazeFile);
-        getMazeDimensions(rawMaze);
+        findMazeDimensions(rawMaze);
         verifyMaze(rawMaze);
         this.maze = rawToArray(rawMaze);
 
@@ -25,11 +29,12 @@ public class Maze {
     }
 
 
-    //=========== MAZE CREATION METHODS ===========//
-    private ArrayList<String> convertToRawMaze(String pathToMazeFile) {
+    //=========== MAZE INITIALIZATION METHODS ===========//
+    private ArrayList<String> convertToRawMaze(String pathToMazeFile) { // Returns an ArrayList of Strings containing the raw maze data
         logger.trace("**** Reading maze from input file path");
         ArrayList<String> rawMaze = new ArrayList<>(); // Stores the raw data from txt file into dynamic arraylist
-        BufferedReader reader = null;
+        BufferedReader reader;
+
         try {
             reader = new BufferedReader(new FileReader(pathToMazeFile));
             while (reader.ready()) {
@@ -43,7 +48,7 @@ public class Maze {
         return rawMaze;
     }
 
-    private void getMazeDimensions(ArrayList<String> rawMaze) {
+    private void findMazeDimensions(ArrayList<String> rawMaze) { // Sets class instance variables for maze dimensions
         logger.trace("**** Getting maze dimensions");
         this.numOfRows = rawMaze.size();
         this.numOfCols = rawMaze.getFirst().length();
@@ -65,9 +70,10 @@ public class Maze {
         }
     }
 
-    private char[][] rawToArray(ArrayList<String> rawMaze) {
+    private char[][] rawToArray(ArrayList<String> rawMaze) { // Converts raw maze data from ArrayList to 2D char array
         logger.trace("**** Storing maze in 2D array");
         char[][] maze = new char[this.numOfRows][this.numOfCols];
+        
         for (int row = 0; row < this.numOfRows; row++) { // Populate maze array
             for (int col = 0; col < this.numOfCols; col++) {
                 logger.trace("**** Assigning index {}, {} to maze", row, col);

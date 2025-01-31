@@ -3,12 +3,13 @@ package ca.mcmaster.se2aa4.mazerunner;
 import java.util.Arrays;
 import static ca.mcmaster.se2aa4.mazerunner.MazeRunner.logger;
 
-public class ForwardSearch extends PathFindingAlgorithm implements StringConverter {
+public class ForwardSearch extends PathFindingAlgorithm implements StringConverter, StartDirectionFinder {
 
-    public String findPath(Maze maze, int[] startPos, int[] endPos) {
+    public String findPath(Maze maze, int[] startPos, int[] endPos) { // Finds path from start to end by attempting to move forward
         logger.trace("**** Finding path using forward search");
-        StringBuilder foundPath = new StringBuilder();
-        DirectionManager currDirection = new DirectionManager('E'); // Assumes always start facing east
+
+        StringBuilder foundPath = new StringBuilder(); // Stores the path found by the algorithm
+        DirectionManager currDirection = new DirectionManager(determineDirection(startPos, endPos)); // Manages direction of movement
 
         while (!Arrays.equals(startPos, endPos)) { // While not at exit of maze
             int[] forwardPos = currDirection.getNewPosition(startPos); // Gets location of forward (Eastward) tile
@@ -17,7 +18,7 @@ public class ForwardSearch extends PathFindingAlgorithm implements StringConvert
                 foundPath.append('F');
                 startPos = forwardPos;
             } else {
-                foundPath.setLength(0);
+                foundPath.setLength(0); // Clear path if forward square is a wall
                 foundPath.append("Forward search algorithm insufficient, unable to find path");
                 return foundPath.toString();
             }
