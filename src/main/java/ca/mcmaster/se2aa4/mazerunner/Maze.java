@@ -41,8 +41,10 @@ public class Maze {
                 // Store maze in ArrayList of Strings
                 rawMaze.add(reader.readLine());
             }
-        } catch (IOException e) {
-            logger.error("Unable to read file from path: {}", pathToMazeFile, e);
+        } catch (IOException e) { // If unable to read file, log error and exit
+            logger.error("Unable to read file from path: {}", pathToMazeFile);
+            System.err.println("Unable to read file from path: " + pathToMazeFile + "\nPlease provide a valid file path!");
+            System.exit(1); // Aborts in scenario where file cannot be read or file path is invalid
         }
 
         return rawMaze;

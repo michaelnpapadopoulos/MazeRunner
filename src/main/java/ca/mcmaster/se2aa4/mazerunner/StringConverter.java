@@ -67,7 +67,7 @@ public interface StringConverter {
 
     //=========== CLEAN METHOD ===========//
     default String removeSpaces(String stringToClean) {
-        String cleanedString = stringToClean.replaceAll("\\s", ""); // Regex to replace all whitespace chars
+        String cleanedString = stringToClean.replaceAll("\\s", ""); // Regex to remove all whitespace chars and replace them with empty string
         return cleanedString;
     }
 }

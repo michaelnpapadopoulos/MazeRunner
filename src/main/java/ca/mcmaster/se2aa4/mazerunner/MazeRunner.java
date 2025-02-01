@@ -66,10 +66,13 @@ public class MazeRunner {
                 }
                 
             } else {
-                System.out.println("** Please provide the path to a maze.txt file using the -i flag **");
+                System.out.println("** Please provide a VALID file path to a maze.txt file using the -i flag **");
             }
 
-        } catch(ParseException e) { logger.error("/!\\\\ An error has occurred whilst trying to parse command line arguments /!\\\\", e); }
+        } catch(ParseException e) { 
+            logger.error("/!\\\\ An error has occurred whilst trying to parse command line arguments /!\\\\"); 
+            System.err.println("An error has occurred whilst trying to parse command line arguments, are you sure you entered them correctly?");
+        }
 
         logger.info("** End of MazeRunner");
     }
