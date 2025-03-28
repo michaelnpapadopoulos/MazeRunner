@@ -2,6 +2,12 @@ package ca.mcmaster.se2aa4.mazerunner;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import ca.mcmaster.se2aa4.mazerunner.path_finding.PathFindingAlgorithm;
+import ca.mcmaster.se2aa4.mazerunner.path_finding.RightHandSearch;
+import ca.mcmaster.se2aa4.mazerunner.path_validation.PathTester;
+import ca.mcmaster.se2aa4.mazerunner.path_validation.PathWalker;
+
 import org.apache.commons.cli.*;
 
 public class MazeRunner {
@@ -19,21 +25,23 @@ public class MazeRunner {
 
     
     //=========== PATH FINDING METHOD ===========//
-    public void findPath(PathFindingAlgorithm pfa) { // Finds path using a given path finding algorithm
+    public String findPath(PathFindingAlgorithm pfa) { // Finds path using a given path finding algorithm
         logger.info("** Computing path");
 
         // Assumes entry is west and exit is east, lets path finding algorithm decide if it needs to reverse to find shortest path
         String pathToExit = pfa.findPath(this.maze, this.maze.getEntryPoints()[0], this.maze.getEntryPoints()[1]);
         System.out.println("Found path: "+ pathToExit);
+        return pathToExit;
     }
 
     
     //=========== PATH VERIFICATION METHOD ===========//
-    public void verifyPath(String path, PathTester pTester) { // Checks if path is valid from west to east and east to west
+    public boolean verifyPath(String path, PathTester pTester) { // Checks if path is valid from west to east and east to west
         logger.info("** Verifying path: {}", path);
 
         boolean pathResults = pTester.testPath(path, maze, this.maze.getEntryPoints()[0], this.maze.getEntryPoints()[1]);
         System.out.println("Path is valid: " + pathResults);
+        return pathResults;
     }
 
     

@@ -1,6 +1,12 @@
-package ca.mcmaster.se2aa4.mazerunner;
+package ca.mcmaster.se2aa4.mazerunner.path_finding;
 
 import java.util.Arrays;
+
+import ca.mcmaster.se2aa4.mazerunner.DirectionManager;
+import ca.mcmaster.se2aa4.mazerunner.Maze;
+import ca.mcmaster.se2aa4.mazerunner.utilities.StartDirectionFinder;
+import ca.mcmaster.se2aa4.mazerunner.utilities.StringConverter;
+
 import static ca.mcmaster.se2aa4.mazerunner.MazeRunner.logger;
 
 public class ForwardSearch extends PathFindingAlgorithm implements StringConverter, StartDirectionFinder {

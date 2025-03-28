@@ -1,4 +1,4 @@
-package ca.mcmaster.se2aa4.mazerunner;
+package ca.mcmaster.se2aa4.mazerunner.utilities;
 
 import static ca.mcmaster.se2aa4.mazerunner.MazeRunner.logger;
 
@@ -7,6 +7,11 @@ public interface StringConverter {
     //=========== FACTORING METHODS ===========//
     default String convertToFactored(String unfactoredPath) {
         logger.trace("**** Converting unfactored path to factored path");
+
+        if (unfactoredPath.isEmpty()) { // Added because of JUnit test
+            return ""; // Return empty string if input is empty
+        }
+
         StringBuilder factoredPath = new StringBuilder();
         int charCount = 1;
 
@@ -37,7 +42,7 @@ public interface StringConverter {
     default String convertToUnfactored(String factoredPath) {
         logger.trace("**** Converting factored path to unfactored path");
         StringBuilder unfactoredPath = new StringBuilder();
-
+        
         for (int charIndex = 0; charIndex < factoredPath.length(); charIndex++) {
             char currChar = factoredPath.charAt(charIndex);
 

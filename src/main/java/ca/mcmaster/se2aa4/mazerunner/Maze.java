@@ -123,4 +123,8 @@ public class Maze {
     }
 
     public int[][] getEntryPoints() { return this.mazeEntrances; } // Getter for entry points
+
+    public int getNumOfRows() { return this.numOfRows; } // Getter for number of rows
+    
+    public int getNumOfCols() { return this.numOfCols; } // Getter for number of columns
 }
