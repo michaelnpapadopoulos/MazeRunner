@@ -8,9 +8,7 @@ public interface StringConverter {
     default String convertToFactored(String unfactoredPath) {
         logger.trace("**** Converting unfactored path to factored path");
 
-        if (unfactoredPath.isEmpty()) { // Added because of JUnit test
-            return ""; // Return empty string if input is empty
-        }
+        if (unfactoredPath.isEmpty()) return ""; // Added because of JUnit test
 
         StringBuilder factoredPath = new StringBuilder();
         int charCount = 1;

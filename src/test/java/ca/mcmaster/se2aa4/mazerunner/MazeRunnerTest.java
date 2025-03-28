@@ -11,7 +11,11 @@ import ca.mcmaster.se2aa4.mazerunner.path_validation.PathWalker;
 
 /**************************************************************************
  * Decided to test MazeRunner directly as I plan on modifying how it is
- * structured/instantiated (Builder pattern) in the refactored version of the code.
+ * structured/instantiated (Builder pattern) in the refactored version 
+ * of the code. For this reason I am not directly testing the path 
+ * finding algorithms or the path validation algorithms as these tests
+ * on MazeRunner are essentially doing that already as the findPath() and
+ * verifyPath() methods are calling the algorithms directly (wrappers).
 **************************************************************************/
 public class MazeRunnerTest {
     private MazeRunner mazeRunner;
