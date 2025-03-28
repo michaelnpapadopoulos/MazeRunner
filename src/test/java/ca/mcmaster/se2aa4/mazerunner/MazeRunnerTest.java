@@ -16,6 +16,9 @@ import ca.mcmaster.se2aa4.mazerunner.path_validation.PathWalker;
  * finding algorithms or the path validation algorithms as these tests
  * on MazeRunner are essentially doing that already as the findPath() and
  * verifyPath() methods are calling the algorithms directly (wrappers).
+ * Each algorithm is tested in their own nested test classes, allowing 
+ * for me to also observe their behaviour as I implement the Command pattern
+ * within them.
 **************************************************************************/
 public class MazeRunnerTest {
     private MazeRunner mazeRunner;
@@ -25,8 +28,12 @@ public class MazeRunnerTest {
     class MazeRunnerDirectMaze {
         @BeforeEach
         void setUp() {
-            // Initialize the MazeRunner object before each test
-            mazeRunner = new MazeRunner("examples/direct.maz.txt");
+            // Initialize the MazeRunner object before each test (changed for builder pattern)
+            mazeRunner = new MazeRunner.Builder()
+                    .withMaze(new Maze("examples/direct.maz.txt"))
+                    .withPathFindingAlgorithm(new RightHandSearch())
+                    .withPathTester(new PathWalker())
+                    .build();
         }
 
         @Test 
@@ -83,7 +90,11 @@ public class MazeRunnerTest {
         @BeforeEach
         void setUp() {
             // Initialize the MazeRunner object before each test
-            mazeRunner = new MazeRunner("examples/straight.maz.txt");
+            mazeRunner = new MazeRunner.Builder()
+                    .withMaze(new Maze("examples/straight.maz.txt"))
+                    .withPathFindingAlgorithm(new RightHandSearch())
+                    .withPathTester(new PathWalker())
+                    .build();
         }
 
         @Test 
