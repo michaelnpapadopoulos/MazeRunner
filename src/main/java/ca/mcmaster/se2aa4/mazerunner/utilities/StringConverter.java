@@ -4,7 +4,13 @@ import static ca.mcmaster.se2aa4.mazerunner.MazeRunner.logger;
 
 public interface StringConverter {
 
-    //=========== FACTORING METHODS ===========//
+    /**************************************************************************
+     * Converts a string of unfactored characters into a "factored" string.
+     * Consecutive characters are replaced with a number indicating how many times they
+     * appear in a row. For example, "aaabbbcc" becomes "3a3b2c".
+     * 
+     * @param unfactoredPath The unfactored path to be factored.
+    **************************************************************************/
     default String convertToFactored(String unfactoredPath) {
         logger.trace("**** Converting unfactored path to factored path");
 
@@ -37,6 +43,11 @@ public interface StringConverter {
         return factoredPath.toString().strip();
     }
 
+    /**************************************************************************
+     * Converts a string of factored characters into an unfactored string.
+     * 
+     * @param factoredPath The factored path to be unfactored.
+    **************************************************************************/
     default String convertToUnfactored(String factoredPath) {
         logger.trace("**** Converting factored path to unfactored path");
         StringBuilder unfactoredPath = new StringBuilder();
@@ -68,7 +79,11 @@ public interface StringConverter {
     }
 
 
-    //=========== CLEAN METHOD ===========//
+    /**************************************************************************
+     * Removes all whitespace characters from a string.
+     * 
+     * @param stringToClean The string to be cleaned of whitespace characters.
+    **************************************************************************/
     default String removeSpaces(String stringToClean) {
         String cleanedString = stringToClean.replaceAll("\\s", ""); // Regex to remove all whitespace chars and replace them with empty string
         return cleanedString;

@@ -1,6 +1,7 @@
 package ca.mcmaster.se2aa4.mazerunner.path_finding;
 
 import static ca.mcmaster.se2aa4.mazerunner.MazeRunner.logger;
+
 import java.util.Arrays;
 
 import ca.mcmaster.se2aa4.mazerunner.DirectionManager;
@@ -10,7 +11,6 @@ import ca.mcmaster.se2aa4.mazerunner.utilities.StringConverter;
 
 public class RightHandSearch extends PathFindingAlgorithm implements StringConverter, StartDirectionFinder {
 
-    //=========== RIGHT HAND SEARCH METHODS ===========//
     public String findPath(Maze maze, int[] startPos, int[] endPos) {
         logger.trace("**** Finding path using right hand search");
         String westToEastPath = findSpecificPath(maze, startPos, endPos, determineDirection(startPos, endPos));
@@ -31,6 +31,14 @@ public class RightHandSearch extends PathFindingAlgorithm implements StringConve
         return convertToFactored(shortestPath);
     }
 
+    /**************************************************************************
+     * Method to verify a given path through the maze using a path tester
+     * 
+     * @param maze the maze object to be used
+     * @param startPos the starting position in the maze
+     * @param endPos the ending position in the maze
+     * @param startingDirection initial facing direction (E or W, for East or West)
+    **************************************************************************/
     private String findSpecificPath(Maze maze, int[] startPos, int[] endPos, char startingDirection) {
         logger.trace("**** Starting right-hand search at: {}, facing {}", startPos, startingDirection);
         StringBuilder path = new StringBuilder();

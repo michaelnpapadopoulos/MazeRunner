@@ -1,14 +1,18 @@
 package ca.mcmaster.se2aa4.mazerunner;
 
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import ca.mcmaster.se2aa4.mazerunner.path_finding.ForwardSearch;
 import ca.mcmaster.se2aa4.mazerunner.path_finding.PathFindingAlgorithm;
 import ca.mcmaster.se2aa4.mazerunner.path_finding.RightHandSearch;
 import ca.mcmaster.se2aa4.mazerunner.path_validation.PathTester;
 import ca.mcmaster.se2aa4.mazerunner.path_validation.PathWalker;
-
-import org.apache.commons.cli.*;
 
 public class MazeRunner {
     public static final Logger logger = LogManager.getLogger(); // Logger object 
@@ -35,10 +39,12 @@ public class MazeRunner {
      * @param pathTester stores the path tester object
      * @param maze stores the maze object for processing throughout methods
     **************************************************************************/
-    public static class Builder { // Builder class for the MazeRunner
-        private PathFindingAlgorithm pathFindingAlgorithm;
-        private PathTester pathTester;
-        private Maze maze;
+    public static class Builder {
+        // Default implementations of path finding algorithm, path tester, and maze 
+        // Are used if none are provided by the user
+        private PathFindingAlgorithm pathFindingAlgorithm = new ForwardSearch();
+        private PathTester pathTester = new PathWalker();
+        private Maze maze = new Maze("examples/direct.maz.txt");
 
         public Builder withPathFindingAlgorithm(PathFindingAlgorithm pathFindingAlgorithm) {
             this.pathFindingAlgorithm = pathFindingAlgorithm;
@@ -56,6 +62,10 @@ public class MazeRunner {
         }
 
         public MazeRunner build() {
+            if (this.maze == null) {
+                logger.error("Maze cannot be null");
+                throw new IllegalArgumentException("Maze cannot be null");
+            }
             return new MazeRunner(this);
         }
     }
@@ -88,6 +98,8 @@ public class MazeRunner {
 
     /**************************************************************************
      * Main method for the MazeRunner class. Used to run the program.
+     * 
+     * @param args command line arguments
     **************************************************************************/
     public static void main(String[] args) {
         logger.info("** Starting Maze Runner");
