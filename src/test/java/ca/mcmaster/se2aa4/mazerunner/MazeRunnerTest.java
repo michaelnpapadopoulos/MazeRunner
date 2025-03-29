@@ -1,13 +1,14 @@
 package ca.mcmaster.se2aa4.mazerunner;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 /**************************************************************************
  * Decided to test MazeRunner directly as I plan on modifying how it is
  * structured/instantiated (Builder pattern) in the refactored version 
- * of the code.
+ * of the codebase. Not testing findPath or verifyPath as they are
+ * wrapper methods for the path finding algorithm and path tester respectively.
 **************************************************************************/
 public class MazeRunnerTest {
     private MazeRunner mazeRunner;

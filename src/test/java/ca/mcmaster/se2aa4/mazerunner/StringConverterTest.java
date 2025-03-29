@@ -42,6 +42,15 @@ public class StringConverterTest {
         assertEquals(expectedUnfactoredPath, actualUnfactoredPath, "Unfactored path should match expected value");
     }
 
+    @Test 
+    void testConvertToUnfactoredEmpty() {
+        // Test the conversion of an empty string to unfactored path
+        String factoredPath = "";
+        String expectedUnfactoredPath = ""; // Expecting an empty string as output
+        String actualUnfactoredPath = stringConverter.convertToUnfactored(factoredPath);
+        assertEquals(expectedUnfactoredPath, actualUnfactoredPath, "Unfactored path should match expected value");
+    }
+
     @Test
     void testRemoveSpaces() {
         // Test the removal of spaces in a string
