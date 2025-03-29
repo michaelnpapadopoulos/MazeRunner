@@ -4,6 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import ca.mcmaster.se2aa4.mazerunner.path_finding.RightHandSearch;
+import ca.mcmaster.se2aa4.mazerunner.path_validation.PathWalker;
 /**************************************************************************
  * Decided to test MazeRunner directly as I plan on modifying how it is
  * structured/instantiated (Builder pattern) in the refactored version 
@@ -16,13 +19,16 @@ public class MazeRunnerTest {
     @BeforeEach
     void setUp() {
         // Initialize the MazeRunner before each test
-        mazeRunner = new MazeRunner("examples/small.maz.txt");
+        mazeRunner = new MazeRunner.Builder()
+            .withPathFindingAlgorithm(new RightHandSearch())
+            .withPathTester(new PathWalker())
+            .withMaze(new Maze("examples/small.maz.txt"))
+            .build();
     }
 
     @Test
     void testInitialization() {
         // Test if the MazeRunner is initialized correctly (Will be important for builder pattern)
-        mazeRunner = new MazeRunner("examples/small.maz.txt");
         assertNotNull(mazeRunner, "MazeRunner should be initialized");
     }
 }
