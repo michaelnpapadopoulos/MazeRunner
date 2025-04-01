@@ -3,8 +3,13 @@ package ca.mcmaster.se2aa4.mazerunner.actions;
 import ca.mcmaster.se2aa4.mazerunner.DirectionManager;
 
 public class LeftAction implements Action {
-    private final DirectionManager currDirection; // Current direction of the maze runner
+    private final DirectionManager currDirection;
 
+    /**************************************************************************
+     * Constructor for LeftAction. Initializes the current direction of the maze runner.
+     * 
+     * @param currDirection The current direction of the maze runner.
+    **************************************************************************/
     public LeftAction(DirectionManager currDirection) {
         this.currDirection = currDirection; 
     }

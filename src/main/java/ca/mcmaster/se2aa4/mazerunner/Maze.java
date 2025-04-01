@@ -1,25 +1,27 @@
 package ca.mcmaster.se2aa4.mazerunner;
 
+import static ca.mcmaster.se2aa4.mazerunner.MazeRunner.logger;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import static ca.mcmaster.se2aa4.mazerunner.MazeRunner.logger;
-
 public class Maze {
-
-    //=========== MAZE ATTRIBUTES ===========//
+    private final int[][] mazeEntrances;
     private final char[][] maze;
     private int numOfRows;
     private int numOfCols;
-    private final int[][] mazeEntrances = new int[2][2];
 
-
-    //=========== MAZE CONSTRUCTOR ===========//
+    /**************************************************************************
+     * Constructor for the Maze class
+     * 
+     * @param pathToMazeFile the path to the maze.txt file
+    **************************************************************************/
     public Maze(String pathToMazeFile) { // Constructor
         logger.trace("**** Constructing Maze object");
 
+        this.mazeEntrances = new int[2][2]; // Initialize mazeEntrances to store two entry points
         ArrayList<String> rawMaze = convertToRawMaze(pathToMazeFile);
         findMazeDimensions(rawMaze);
         verifyMaze(rawMaze);
@@ -28,11 +30,14 @@ public class Maze {
         findEntryPoints();
     }
 
-
-    //=========== MAZE INITIALIZATION METHODS ===========//
-    private ArrayList<String> convertToRawMaze(String pathToMazeFile) { // Returns an ArrayList of Strings containing the raw maze data
+    /**************************************************************************
+     * Reads the maze.txt file provided and stores the data in a dynamic arraylist
+     * 
+     * @param pathToMazeFile the path to the maze.txt file
+    **************************************************************************/
+    private ArrayList<String> convertToRawMaze(String pathToMazeFile) {
         logger.trace("**** Reading maze from input file path");
-        ArrayList<String> rawMaze = new ArrayList<>(); // Stores the raw data from txt file into dynamic arraylist
+        ArrayList<String> rawMaze = new ArrayList<>();
         BufferedReader reader;
 
         try {
@@ -44,19 +49,29 @@ public class Maze {
         } catch (IOException e) { // If unable to read file, log error and exit
             logger.error("Unable to read file from path: {}", pathToMazeFile);
             System.err.println("Unable to read file from path: " + pathToMazeFile + "\nPlease provide a valid file path!");
-            System.exit(1); // Aborts in scenario where file cannot be read or file path is invalid
+            System.exit(1);
         }
 
         return rawMaze;
     }
 
+    /**************************************************************************
+     * Sets the maze dimensions based on the size of the raw maze data
+     * 
+     * @param rawMaze the raw maze data
+    **************************************************************************/
     private void findMazeDimensions(ArrayList<String> rawMaze) { // Sets class instance variables for maze dimensions
         logger.trace("**** Getting maze dimensions");
         this.numOfRows = rawMaze.size();
         this.numOfCols = rawMaze.getFirst().length();
     }
 
-    private void verifyMaze(ArrayList<String> rawMaze) { // Ensures no empty rows in maze (Possibly unnecessary, but included for robustness)
+    /**************************************************************************
+     * Verifies that the maze does not contain any entirely blank/empty rows
+     * 
+     * @param rawMaze the raw maze data
+    **************************************************************************/
+    private void verifyMaze(ArrayList<String> rawMaze) {
         logger.trace("**** Verifying maze");
 
         if (rawMaze.contains("")) { // Contains the empty string
@@ -72,7 +87,12 @@ public class Maze {
         }
     }
 
-    private char[][] rawToArray(ArrayList<String> rawMaze) { // Converts raw maze data from ArrayList to 2D char array
+    /**************************************************************************
+     * Converts the raw maze data from an ArrayList of Strings to a 2D char array
+     * 
+     * @param rawMaze the raw maze data
+    **************************************************************************/
+    private char[][] rawToArray(ArrayList<String> rawMaze) {
         logger.trace("**** Storing maze in 2D array");
         char[][] maze = new char[this.numOfRows][this.numOfCols];
         
@@ -86,6 +106,9 @@ public class Maze {
         return maze;
     }
 
+    /**************************************************************************
+     * Finds the entry points of the maze by checking the west and east walls
+    **************************************************************************/
     private void findEntryPoints() {
         logger.trace("**** Finding maze entry points");
         for (int row = 0; row < this.numOfRows; row++) { 
@@ -100,18 +123,12 @@ public class Maze {
 
         logger.trace("**** Found west and east entry respectively: ({}, {}), ({}, {}) ", this.mazeEntrances[0][0], this.mazeEntrances[0][1], this.mazeEntrances[1][0], this.mazeEntrances[1][1]);
     }
-    
 
-    //=========== MAZE INTERACTION METHODS ===========//
-    public void displayMaze() { // Displays the maze to std out (For later development)
-        for (int row = 0; row < this.numOfRows; row++) {
-            for (int col = 0; col < this.numOfCols; col++) {
-                System.out.printf("%c", this.maze[row][col]);
-            }
-            System.out.println();
-        }
-    }
-
+    /**************************************************************************
+     * Checks if a given coordinate is within the maze bounds and is not a wall
+     * 
+     * @param coordinate the coordinate to check
+    **************************************************************************/
     public boolean checkCoord(int[] coordinate) { // Returns true if coordinate exists and is not a wall
         logger.trace("**** Checking coordinate {}, {}", coordinate[0], coordinate[1]);
 
@@ -122,9 +139,18 @@ public class Maze {
         return this.maze[coordinate[0]][coordinate[1]] == ' ';
     }
 
-    public int[][] getEntryPoints() { return this.mazeEntrances; } // Getter for entry points
+    /**************************************************************************
+     * Returns a copy of the maze entrances as a 2D int array
+    **************************************************************************/
+    public int[][] getEntryPoints() { return this.mazeEntrances.clone(); }
 
+    /**************************************************************************
+     * Getter for maze rows
+    **************************************************************************/
     public int getNumOfRows() { return this.numOfRows; } // Getter for number of rows
     
+    /**************************************************************************
+     * Getter for maze columns
+    **************************************************************************/
     public int getNumOfCols() { return this.numOfCols; } // Getter for number of columns
 }

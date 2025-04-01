@@ -1,9 +1,6 @@
 package ca.mcmaster.se2aa4.mazerunner.actions;
 
 import java.util.Stack;
-
-import ca.mcmaster.se2aa4.mazerunner.utilities.StringConverter;
-
 /**************************************************************************
  * Using an action manager to provide a cleaner interface for actions
  * throughout the maze. Manages the action (Command) history and the path
@@ -11,7 +8,7 @@ import ca.mcmaster.se2aa4.mazerunner.utilities.StringConverter;
  * 
  * @param action The action to be added.
 **************************************************************************/
-public class ActionManager implements StringConverter {
+public class ActionManager {
     private final Stack<Action> actionHistory;
     private final StringBuilder path;
 
@@ -42,6 +39,7 @@ public class ActionManager implements StringConverter {
         if (!actionHistory.isEmpty()) {
             Action action = actionHistory.pop();
             action.undoAction();
+            this.path.setLength(this.path.length() - 1); // Remove the last character from the path string
         }
     }
 
@@ -64,9 +62,9 @@ public class ActionManager implements StringConverter {
     }
 
     /**************************************************************************
-     * Returns the factored path as a string.
+     * Returns the path as a string.
     **************************************************************************/
     public String getPath() {
-        return convertToFactored(path.toString());
+        return path.toString();
     }
 }

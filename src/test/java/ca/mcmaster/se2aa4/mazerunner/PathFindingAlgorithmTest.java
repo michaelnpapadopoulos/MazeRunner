@@ -51,7 +51,7 @@ public class PathFindingAlgorithmTest {
             int[] startPos = {8, 0};
             int[] endPos = {5, 10};
             String resultPath = pathFindingAlgorithm.findPath(maze, startPos, endPos);
-            String expectedPath = "F R 2F L 2F R 2F R 2F 2L 8F 2L 2F R 2F R 2F L 2F 2L 2F R 2F R 4F R 2F L F R F";
+            String expectedPath = "FRFFLFFRFFRFFLLFFFFFFFFLLFFRFFRFFLFFLLFFRFFRFFFFRFFLFRF";
             assertEquals(expectedPath, resultPath, "Path should be found using right hand search algorithm");
         }
     }

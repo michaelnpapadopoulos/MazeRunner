@@ -38,16 +38,18 @@ public class PathTesterTest {
         assertNotNull(pathTester, "Path tester should be initialized");
     }
 
+    // Modified to use the raw path string as I have removed the StringConverter interface
+    // from the PathTester class's and do it within the MazeRunner class itself
     @Test
     void testValidPath() {
-        String path = "F R 2F L 2F R 2F R 2F 2L 8F 2L 2R 6L 2F R 2F R 2F L 2F 2L 2F R 2F R 4F R 2F L F R F"; // Example path to test
+        String path = "FRFFLFFRFFRFFLLFFFFFFFFLLRRLLLLLLFFRFFRFFLFFLLFFRFFRFFFFRFFLFRF"; // Example path to test
         boolean testerResult = pathTester.testPath(path, maze, startPos, endPos);
         assertTrue(testerResult, "Path should be valid"); // Check if the path is valid
     }
 
     @Test
     void testInvalidPath() {
-        String path = "F R 2F L 2F R 2F R 2F 2L 8F"; // Example path to test
+        String path = "FRFFLFFRFFRFFLLFFFFFFFF"; // Example path to test
         boolean testerResult = pathTester.testPath(path, maze, startPos, endPos);
         assertFalse(testerResult, "Path should be invalid"); // Check if the path is invalid
     }

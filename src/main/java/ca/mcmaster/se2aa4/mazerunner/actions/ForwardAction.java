@@ -5,12 +5,20 @@ import static ca.mcmaster.se2aa4.mazerunner.MazeRunner.logger;
 import ca.mcmaster.se2aa4.mazerunner.DirectionManager;
 
 public class ForwardAction implements Action {
-    private final DirectionManager currDirection; // Current direction of the maze runner
-    private final int[] prevPos = new int[2]; // Previous position of the maze runner
-    private int[] currPos; // New position of the maze runner
+    private final DirectionManager currDirection;
+    private final int[] prevPos;
+    private int[] currPos; 
 
+    /**************************************************************************
+     * Constructor for ForwardAction. Initializes the current position and 
+     * direction of the maze runner.
+     * 
+     * @param currPos The current position of the maze runner.
+     * @param currDirection The current direction of the maze runner.
+    **************************************************************************/
     public ForwardAction(int[] currPos, DirectionManager currDirection) {
         this.currDirection = currDirection;
+        this.prevPos = new int[2];
         this.currPos = currPos;        
     }
 

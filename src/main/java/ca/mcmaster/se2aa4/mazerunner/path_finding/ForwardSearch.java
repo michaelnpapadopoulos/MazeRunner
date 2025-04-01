@@ -6,30 +6,37 @@ import java.util.Arrays;
 
 import ca.mcmaster.se2aa4.mazerunner.DirectionManager;
 import ca.mcmaster.se2aa4.mazerunner.Maze;
+import ca.mcmaster.se2aa4.mazerunner.actions.ActionManager;
+import ca.mcmaster.se2aa4.mazerunner.actions.ForwardAction;
 import ca.mcmaster.se2aa4.mazerunner.utilities.StartDirectionFinder;
-import ca.mcmaster.se2aa4.mazerunner.utilities.StringConverter;
 
-public class ForwardSearch extends PathFindingAlgorithm implements StringConverter, StartDirectionFinder {
+public class ForwardSearch extends PathFindingAlgorithm implements StartDirectionFinder {
 
-    public String findPath(Maze maze, int[] startPos, int[] endPos) { // Finds path from start to end by attempting to move forward
+    /**************************************************************************
+     * Finds path through maze by simply attempting to move forward. Will
+     * return a string of the path taken, or an insufficient path message if
+     * unable to find path moving forward.
+     * 
+     * @param maze the maze object to be used
+     * @param startPos the west entrance in the maze
+     * @param endPos the east entrance in the maze
+    **************************************************************************/
+    public String findPath(Maze maze, int[] startPos, int[] endPos) {
         logger.trace("**** Finding path using forward search");
-
-        StringBuilder foundPath = new StringBuilder(); // Stores the path found by the algorithm
         DirectionManager currDirection = new DirectionManager(determineDirection(startPos, endPos)); // Manages direction of movement
+        ActionManager actionManager = new ActionManager(); // Tracks actions taken and the path they construct
+        int[] currPos = startPos.clone(); // Set current position to start position
 
-        while (!Arrays.equals(startPos, endPos)) { // While not at exit of maze
-            int[] forwardPos = currDirection.getNewPosition(startPos); // Gets location of forward (Eastward) tile
+        while (!Arrays.equals(currPos, endPos)) { // While not at exit of maze
+            int[] forwardPos = currDirection.getNewPosition(currPos); // Gets location of forward (Eastward) tile
 
             if (maze.checkCoord(forwardPos)) { // Checks forward square
-                foundPath.append('F');
-                startPos = forwardPos;
+                actionManager.executeAction(new ForwardAction(currPos, currDirection)); // Executes action to move forward
             } else {
-                foundPath.setLength(0); // Clear path if forward square is a wall
-                foundPath.append("Forward search algorithm insufficient, unable to find path");
-                return foundPath.toString();
+                return "Forward search algorithm insufficient, unable to find path";
             }
         }
 
-        return convertToFactored(foundPath.toString());
+        return actionManager.getPath(); // Returns the path taken
     }
 }

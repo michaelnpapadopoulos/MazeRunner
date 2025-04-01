@@ -6,10 +6,13 @@ import java.util.Arrays;
 
 import ca.mcmaster.se2aa4.mazerunner.DirectionManager;
 import ca.mcmaster.se2aa4.mazerunner.Maze;
+import ca.mcmaster.se2aa4.mazerunner.actions.ActionManager;
+import ca.mcmaster.se2aa4.mazerunner.actions.ForwardAction;
+import ca.mcmaster.se2aa4.mazerunner.actions.LeftAction;
+import ca.mcmaster.se2aa4.mazerunner.actions.RightAction;
 import ca.mcmaster.se2aa4.mazerunner.utilities.StartDirectionFinder;
-import ca.mcmaster.se2aa4.mazerunner.utilities.StringConverter;
 
-public class RightHandSearch extends PathFindingAlgorithm implements StringConverter, StartDirectionFinder {
+public class RightHandSearch extends PathFindingAlgorithm implements StartDirectionFinder {
 
     public String findPath(Maze maze, int[] startPos, int[] endPos) {
         logger.trace("**** Finding path using right hand search");
@@ -28,7 +31,7 @@ public class RightHandSearch extends PathFindingAlgorithm implements StringConve
         }
 
         System.out.println("Starting wall: " + startingWall);
-        return convertToFactored(shortestPath);
+        return shortestPath;
     }
 
     /**************************************************************************
@@ -41,35 +44,33 @@ public class RightHandSearch extends PathFindingAlgorithm implements StringConve
     **************************************************************************/
     private String findSpecificPath(Maze maze, int[] startPos, int[] endPos, char startingDirection) {
         logger.trace("**** Starting right-hand search at: {}, facing {}", startPos, startingDirection);
-        StringBuilder path = new StringBuilder();
-        int[] currPos = startPos;
+        ActionManager actionManager = new ActionManager();
         DirectionManager currDirection = new DirectionManager(startingDirection);
-        DirectionManager tempDirection; // Stores the direction to the relative right of the current direction
-        
+        DirectionManager relativeRightDirection;
+        int[] currPos = startPos.clone(); // Preserve original start position
+
         while (!Arrays.equals(currPos, endPos)) {
             logger.trace("**** Pos: [{}, {}]", currPos[0], currPos[1]);
 
             // Uses temp direction to keep track of relative "right" to current direction
-            tempDirection = new DirectionManager(currDirection.getTrueDirection());
-            tempDirection.turnRight();
+            relativeRightDirection = new DirectionManager(currDirection.getTrueDirection());
+            relativeRightDirection.turnRight();
 
-            int[] rightSquare = tempDirection.getNewPosition(currPos);
+            int[] rightSquare = relativeRightDirection.getNewPosition(currPos);
             int[] forwardSquare = currDirection.getNewPosition(currPos);
 
             if (maze.checkCoord(rightSquare)) { // Check if right square is valid first
-                currDirection.turnRight();
-                path.append("RF");
-                currPos = rightSquare;
+                // Turn right and move forward
+                actionManager.executeAction(new RightAction(currDirection));
+                actionManager.executeAction(new ForwardAction(currPos, currDirection));
             } else if (maze.checkCoord(forwardSquare)) { // Cant go right attempt to go forward
-                path.append('F');
-                currPos = forwardSquare;
+                actionManager.executeAction(new ForwardAction(currPos, currDirection));
             } else { // Turn left if all else fails
-                currDirection.turnLeft();
-                path.append('L');
+                actionManager.executeAction(new LeftAction(currDirection));
             }
         }
         
-        logger.trace("**** Found path: {}", path);
-        return path.toString();
+        logger.trace("**** Found path: {}", actionManager.getPath());
+        return actionManager.getPath();
     }
 }
